@@ -18,6 +18,7 @@ struct GrayLoggerConfig {
 }
 
 class GrayLogger : Logger {
+@safe:
 	GrayLoggerConfig config;
 	LogLine ll;
 	string msg;
@@ -26,16 +27,16 @@ class GrayLogger : Logger {
 		this.config = config;
 	}
 
-	override void beginLine(ref LogLine ll) @safe {
+	override void beginLine(ref LogLine ll) {
 		this.msg = "";
 		this.ll = ll;
 	}
 
-	override void put(scope const(char)[] text) @safe {
+	override void put(scope const(char)[] text) {
 		this.msg ~= text;
 	}
 
-	override void endLine() @trusted {
+	override void endLine() {
 		import std.algorithm.comparison : min;
 
 		const sMsgLen = min( this.msg.length , this.config.shortMessageLength);
@@ -54,18 +55,20 @@ class GrayLogger : Logger {
 		theMessage.hostTime = this.ll.time.toISOExtString();
 
 		theMessage.full_message = this.msg;
-		try {
-			auto udp_sender = listenUDP(0);
-			udp_sender.connect(this.config.url, this.config.port);
-    		foreach(c; Chunks(theMessage, this.config.chuckSize)) {
-    		    udp_sender.send(c);
-			}
-		} catch(Exception e) {
+		() @trusted {
 			try {
-				writeln(e.toString());
-			} catch(Exception f) {
+				auto udp_sender = listenUDP(0);
+				udp_sender.connect(this.config.url, this.config.port);
+				foreach(c; Chunks(theMessage, this.config.chuckSize)) {
+					udp_sender.send(c);
+				}
+			} catch(Exception e) {
+				try {
+					writeln(e.toString());
+				} catch(Exception f) {
+				}
 			}
-		}
+		}();
 	}
 }
 
