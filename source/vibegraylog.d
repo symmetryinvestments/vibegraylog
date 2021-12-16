@@ -1,8 +1,8 @@
 module vibegraylog;
 
-import vibe.core.log;
-import std.socket;
+import std.array : empty;
 import std.stdio;
+import vibe.core.log;
 import vibe.core.net;
 import vibe.core.core : runTask, sleep;
 import gelf;
@@ -18,9 +18,6 @@ struct GrayLoggerConfig {
 }
 
 class GrayLogger : Logger {
-	import std.format : format;
-	import std.string : toStringz;
-
 	GrayLoggerConfig config;
 	LogLine ll;
 	string msg;
