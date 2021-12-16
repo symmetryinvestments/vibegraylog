@@ -43,7 +43,9 @@ class GrayLogger : Logger {
 
 		const sMsgLen = min( this.msg.length , this.config.shortMessageLength);
 		Message theMessage = Message(this.config.thisHost
-				, this.msg[0 .. sMsgLen]
+				, this.msg.empty
+					? "no_message"
+					: this.msg[0 .. sMsgLen]
 				, vibeLogLevel(this.ll.level)
 				);
 		theMessage.originalLogLevel = this.ll.level;
