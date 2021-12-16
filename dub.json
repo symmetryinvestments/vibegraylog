@@ -1,0 +1,13 @@
+{
+	"authors": [
+		"Robert burner Schadek"
+	],
+	"copyright": "Symmetry Investments © 2021",
+	"dependencies": {
+		"gelfd": "~>1.3.3",
+		"vibe-d": ">=0.9.4"
+	},
+	"description": "A vibe.d logger that logs via gelf packages via udp to graylog",
+	"license": "LGPL3",
+	"name": "vibegraylog"
+}
