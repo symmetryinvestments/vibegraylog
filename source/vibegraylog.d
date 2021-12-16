@@ -13,7 +13,7 @@ struct GrayLoggerConfig {
 	string url;
 	ushort port;
 	string thisHost;
-	ulong shortMessageLength;
+	ulong shortMessageLength = 30;
 	ushort chuckSize = 500;
 }
 
@@ -41,7 +41,7 @@ class GrayLogger : Logger {
 
 		const sMsgLen = min( this.msg.length , this.config.shortMessageLength);
 		Message theMessage = Message(this.config.thisHost
-				, this.msg.empty
+				, this.msg.empty || sMsgLen == 0
 					? "no_message"
 					: this.msg[0 .. sMsgLen]
 				, vibeLogLevel(this.ll.level)
@@ -83,6 +83,7 @@ class GrayLogger : Logger {
 	logInfo("Info");
 	logError("Error");
 	logWarn("Warning");
+	logWarn("");
 	logCritical("Critical");
 	logFatal("Fatal");
 }
